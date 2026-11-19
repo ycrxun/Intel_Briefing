@@ -59,12 +59,12 @@ jobs:
           echo "📄 Report found: $(wc -c < "$REPORT") bytes"
 
           git clone https://x-access-token:${PWA_DEPLOY_TOKEN}@github.com/${PWA_REPO}.git /tmp/pwa
-          cp "$REPORT" /tmp/pwa/data/daily_briefings/
+          cp "$REPORT" /tmp/pwa/
 
           # Copy pre-generated summaries if available
           if [ -f "$SUMMARIES" ]; then
-            mkdir -p /tmp/pwa/public/data/summaries
-            cp "$SUMMARIES" /tmp/pwa/public/data/summaries/
+            mkdir -p /tmp/pwa/summaries
+            cp "$SUMMARIES" /tmp/pwa/summaries/
             echo "📝 Summaries found: $(wc -c < "$SUMMARIES") bytes"
           else
             echo "⚠️ No summaries file found, PWA will generate on build"
@@ -73,10 +73,10 @@ jobs:
           cd /tmp/pwa
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/daily_briefings/
+          git add ./
           # Only stage summaries if they were actually copied (dir may not exist)
-          if [ -d public/data/summaries ]; then
-            git add -f public/data/summaries/
+          if [ -d ./summaries ]; then
+            git add -f ./summaries/
           fi
           git diff --cached --stat
 
